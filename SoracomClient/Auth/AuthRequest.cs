@@ -9,11 +9,11 @@ namespace Soracom.Auth
     /// <summary>
     /// 
     /// </summary>
-    public class AuthRequest: JsonObject
+    public class AuthRequest : JsonObject
     {
         public string email { get; set; }
         public string password { get; set; }
-        public int tokenTimeoutSeconds { get; set; }
+        public int? tokenTimeoutSeconds { get; set; }
 
     }
 }

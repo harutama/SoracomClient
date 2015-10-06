@@ -16,11 +16,18 @@ namespace Soracom.Auth
             this.parent = parent;
         }
 
-
+        /// <summary>
+        /// /auth<br/>
+        /// Operator の認証を行う。<br/>
+        /// 認証が成功した場合、API キー、オペレータ ID、 Token が返却される。<br/>
+        /// 認証が必要なAPIのリクエストには API キーと Token をヘッダーに付与する必要がある。
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<AuthResponse> Auth(AuthRequest request)
         {
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, new Uri(parent.BaseUri, "auth"));
-            message.Content = new StringContent(request.ToString(), Encoding.UTF8, "application/json");
+            message.Content = parent.ToStringContent(request);
 
             AuthResponse response = await this.parent.SendRequest<AuthResponse>(message);
 

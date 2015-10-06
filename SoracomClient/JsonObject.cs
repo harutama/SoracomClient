@@ -12,7 +12,12 @@ namespace Soracom
 
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this);
+            //どうにかこうにかしたい場合はここを参照
+            //http://www.newtonsoft.com/json/help/html/Samples.htm
+            JsonSerializerSettings setting = new JsonSerializerSettings();
+            setting.NullValueHandling = NullValueHandling.Ignore;
+
+            return JsonConvert.SerializeObject(this, setting);
         }
 
     }

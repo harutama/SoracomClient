@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Soracom.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +11,23 @@ namespace Soracom
 {
     public class SoracomClient
     {
-        internal readonly Uri BaseUri = new Uri("https://api.soracom.io/v1");
+        private readonly HttpClient Client;
 
+        internal readonly Uri BaseUri = new Uri("https://api.soracom.io/v1/");
+
+        public readonly AuthOperation Auth;
+
+        public SoracomClient(HttpMessageHandler handler)
+        {
+            this.Client = new HttpClient(handler);
+
+            this.Auth = new AuthOperation(this);
+        }
 
 
         internal async Task<T> SendRequest<T>(HttpRequestMessage message) where T : class
         {
-            HttpClient client = new HttpClient();
-            HttpResponseMessage response = await client.SendAsync(message, HttpCompletionOption.ResponseContentRead);
+            HttpResponseMessage response = await this.Client.SendAsync(message, HttpCompletionOption.ResponseContentRead);
 
             string content = await response.Content.ReadAsStringAsync();
 
@@ -34,5 +44,12 @@ namespace Soracom
 
             return retval;
         }
+
+        internal StringContent ToStringContent(JsonObject obj)
+        {
+            return new StringContent(obj.ToString(), Encoding.UTF8, "application/json");
+        }
+
+
     }
 }
